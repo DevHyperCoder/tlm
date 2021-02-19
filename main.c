@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "log.h"
 
-int main(){
+int main() {
     info("TLM - Terminal Login Manager");
 }
