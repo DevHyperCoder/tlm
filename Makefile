@@ -2,7 +2,7 @@ CC=gcc
 CFLAGS=-I.
 
 compile: main.o utils.o
-	$(CC) -o tlm *.c -lncurses -lform
+	$(CC) -o tlm *.c -lncurses -lform -lpam
 	rm -f *.o
 
 run:

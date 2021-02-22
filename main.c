@@ -3,6 +3,7 @@
 #include <ncurses.h>
 #include <form.h>
 
+#include "pam.h"
 #include "utils.h"
 #include "log.h"
 
@@ -10,21 +11,17 @@ static FORM *form;
 static FIELD *fields[5];
 static WINDOW *win_body, *win_form;
 
+static pid_t child_pid;
+
 static void driver(int ch) {
     switch (ch) {
     case KEY_ENTER:
     case 10:
         form_driver(form, REQ_VALIDATION);
+        char *username = trim_whitespace(field_buffer(fields[1], 0));
+        char *password = trim_whitespace(field_buffer(fields[3], 0));
 
-        move(LINES-3, 2);
-        for (int i = 0; fields[i]; i++) {
-            printw("%s", trim_whitespace(field_buffer(fields[i], 0)));
-
-            if (field_opts(fields[i]) & O_ACTIVE)
-                printw("\"\t");
-            else
-                printw(": \"");
-        }
+        login(username,password,&child_pid);
 
         refresh();
         pos_form_cursor(form);
