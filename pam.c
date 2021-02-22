@@ -1,3 +1,7 @@
+/**
+ * Functions related to PAM Authentication functionality
+ * */
+
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
 
@@ -26,6 +30,11 @@ static int conv(int num_msg, const struct pam_message **msg,
 
 static pam_handle_t *pam_handle;
 
+/**
+ * PAM login
+ * Uses `err` macro to communicate errors
+ * Also initializes environment variables
+*/
 bool login(const char *username, const char *password, pid_t *child_pid) {
     const char *data[2] = {username, password};
     struct pam_conv pam_conv = {
@@ -61,10 +70,12 @@ bool login(const char *username, const char *password, pid_t *child_pid) {
     struct passwd *pw = getpwnam(username);
     init_env(pw);
 
-
     return true;
 }
 
+/**
+ * Communication function for PAM
+ * */
 static int conv(int num_msg, const struct pam_message **msg,
                 struct pam_response **resp, void *appdata_ptr) {
     int i;
@@ -108,6 +119,9 @@ static int conv(int num_msg, const struct pam_message **msg,
     return result;
 }
 
+/**
+ * Sets various environment variables for basic functions
+ * */
 static void init_env(struct passwd *pw) {
     set_env("HOME", pw->pw_dir);
     set_env("PWD", pw->pw_dir);
@@ -118,6 +132,9 @@ static void init_env(struct passwd *pw) {
     set_env("MAIL", _PATH_MAILDIR);
 }
 
+/**
+ * Add `name`:`value` in the pam env
+ * */
 static void set_env(char *name, char *value) {
     // The `+ 2` is for the '=' and the null byte
     size_t name_value_len = strlen(name) + strlen(value) + 2;
