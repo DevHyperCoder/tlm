@@ -33,6 +33,9 @@ char *start_x_cmd = "$HOME/.local/bin/x";
 char *username_label =  "Username:";
 char *password_label =  "Password:";
 
+// Default username to be injected 
+char *username_def =  "";
+
 static void start_x_server() {
     x_server_pid = fork();
     if(x_server_pid ==0) {
@@ -134,7 +137,7 @@ int main() {
     assert(fields[0] != NULL && fields[1] != NULL && fields[2] != NULL && fields[3] != NULL);
 
     set_field_buffer(fields[0], 0,username_label);
-    set_field_buffer(fields[1], 0, "");
+    set_field_buffer(fields[1], 0, username_def);
     set_field_buffer(fields[2], 0,password_label);
     set_field_buffer(fields[3], 0, "");
 
