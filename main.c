@@ -1,7 +1,9 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
 #include <ncurses.h>
 #include <form.h>
+#include <unistd.h>
 
 #include "pam.h"
 #include "utils.h"
@@ -12,6 +14,21 @@ static FIELD *fields[5];
 static WINDOW *win_body, *win_form;
 
 static pid_t child_pid;
+static pid_t x_server_pid;
+
+static void start_x_server() {
+    x_server_pid = fork();
+    if(x_server_pid ==0) {
+        char cmd[64];
+        snprintf(cmd,sizeof(cmd),"/home/devhypercoder/.local/bin/x");
+        execl("/bin/sh", "/bin/sh", "-c",cmd,NULL);
+        printf("Fail");
+        exit(1);
+    } else {
+        sleep(1);
+    }
+}
+
 
 static void driver(int ch) {
     switch (ch) {
@@ -21,7 +38,9 @@ static void driver(int ch) {
         char *username = trim_whitespace(field_buffer(fields[1], 0));
         char *password = trim_whitespace(field_buffer(fields[3], 0));
 
-        login(username,password,&child_pid);
+        if(login(username,password,&child_pid)) {
+            start_x_server();
+        }
 
         refresh();
         pos_form_cursor(form);
@@ -62,8 +81,7 @@ static void driver(int ch) {
     wrefresh(win_form);
 }
 
-int main()
-{
+int main() {
     int ch;
 
     // Init ncurses

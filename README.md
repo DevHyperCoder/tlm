@@ -7,7 +7,7 @@ Still in development
 ## Features done till now:
 - NCurses Form
 - PAM Authentication
+- Start X
 
 ## Features to do:
-- Start X
 - Config file (config.h)
