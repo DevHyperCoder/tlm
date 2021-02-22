@@ -1,8 +1,8 @@
 CC=gcc
 CFLAGS=-I.
 
-compile: main.o
-	$(CC) -o tlm *.c -lncurses
+compile: main.o utils.o
+	$(CC) -o tlm *.c -lncurses -lform
 	rm -f *.o
 
 run:
