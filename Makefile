@@ -9,6 +9,6 @@ run:
 	./tlm
 
 clean:
-	rm -f *.o
+	rm -f *.o *.orig tlm
 
 .PHONY: clean
